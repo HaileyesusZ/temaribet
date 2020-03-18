@@ -1,0 +1,192 @@
+package concreteClasses;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import utilityClasses.DBOperation;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class InactiveUser {
+    private static final String TABLE_NAME = "inactiveusers";
+    private static final String VIEW_NAME= "inactiveusersview";
+    
+    // private attributes of an inactive user
+    private final Integer id;
+    private final Integer userId;
+    private String activationId;
+    private String activationKey;
+    private Timestamp expirationDate;
+    
+    //Properties used for database operations
+    private static String sql;
+    private static PreparedStatement statement;
+    private static ResultSet result;
+    private static Connection conn;
+
+    public InactiveUser(Integer id, Integer userId, String activationId, String activationKey, Timestamp expirationDate)
+    {
+        this.id = id;
+        this.userId = userId;
+        this.activationId = activationId;
+        this.activationKey = activationKey;
+        this.expirationDate = expirationDate;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public String getActivationId() {
+        return activationId;
+    }
+
+    public String getActivationKey() {
+        return activationKey;
+    }
+    
+    public Timestamp getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setActivationId(String activationId) {
+        this.activationId = activationId;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
+    }
+    
+    public void setExpirationDate(Timestamp expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+   
+    public Boolean persist(boolean active) throws Exception{
+        ArrayList<Object> columns = new ArrayList<>();
+        
+        columns.add(null);
+        columns.add(this.userId);
+        columns.add(this.activationId);
+        columns.add(this.activationKey);
+        columns.add(this.expirationDate);
+        
+        HashMap<String, String> condition = new HashMap<>();
+        condition.put("userId", String.valueOf(this.userId));
+        
+        try {
+            return DBOperation.persist(TABLE_NAME, columns, condition,active);
+        }catch(Exception ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+        
+        
+    }
+
+    public static InactiveUser fetch(Integer id) throws Exception{
+        result = DBOperation.fetch(VIEW_NAME, id);
+       
+        if(result != null) {
+            return fetchData().get(0);
+        }
+        return null;
+        
+    }
+
+    public static ArrayList<InactiveUser> fetch(HashMap<String,String> parameters) throws Exception{
+        result = DBOperation.fetch(VIEW_NAME, parameters);
+        
+        return fetchData();
+    }
+    
+    public static ArrayList<InactiveUser> fetchAll() throws Exception{
+        result = DBOperation.fetchAll(VIEW_NAME);
+        return fetchData();
+    }
+    
+    public static ArrayList<InactiveUser> extendFetch(HashMap<String, ArrayList<String>> parameters) throws Exception {
+        result = DBOperation.extendFetch(VIEW_NAME, parameters);
+        return fetchData();
+    }
+    
+    public static ArrayList<InactiveUser> fetchData() throws Exception {
+         if(result == null){
+            return null;
+        }
+        ArrayList<InactiveUser> inactiveUsers = new ArrayList<>();
+        try {
+            while(result.next()){
+                Integer tempId = result.getInt("id");
+                Integer tempUserId = result.getInt("userId");
+                String tempActivationId = result.getString("activationId");
+                String tempActivationKey = result.getString("activationKey");
+                Timestamp tempExpirationTimestamp = result.getTimestamp("expirationDate");
+
+                InactiveUser inactiveUser = new InactiveUser(tempId, tempUserId, tempActivationId, tempActivationKey, tempExpirationTimestamp);
+                inactiveUsers.add(inactiveUser);
+            }
+            return inactiveUsers;
+            
+        }catch(SQLException ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public void delete() throws Exception{
+        if(conn == null){
+            conn = DBConnection.getConnection();
+        }
+        
+        sql = "UPDATE "+TABLE_NAME +" SET active = 0 WHERE id = ?";
+        try {
+            statement = conn.prepareStatement(sql);
+            statement.setInt(1, this.id);
+            statement.execute();
+        }catch(SQLException ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public void updateAttribute(String attributeName, String attributeValue) throws Exception {
+        try {
+            DBOperation.updateAttribute(TABLE_NAME, this.getId(), attributeName, attributeValue);
+        }catch(Exception ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public void updateAttributes(HashMap<String,String> attributes) throws Exception {
+         try{
+            DBOperation.updateAttributes(TABLE_NAME, this.getId(), attributes);
+        }
+        catch(Exception ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public static int count(HashMap<String,String> paramters) throws Exception {
+        try{
+            return DBOperation.count(VIEW_NAME, paramters);
+        }
+        catch(Exception ex){
+            Logger.getLogger(InactiveUser.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        } 
+    }
+}

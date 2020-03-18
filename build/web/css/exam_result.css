@@ -1,0 +1,67 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 15, 2016, 3:09:28 PM
+    Author     : Tsige
+*/
+body{
+    background: #fdfefe;
+}
+
+#main_wrapper{
+    padding-top: 5%;
+}
+
+.glyphicon-stats{
+    font-size: 40px;
+    color: #940e83;
+}
+
+#restart_button, #back_to_dashboard_button{
+    background: #1e7f7c;
+    color: white;
+    margin-top: 3%;
+}
+#decision_btns_wrapper{
+    padding-left: 5%;
+}
+
+#fa_btn{
+    border-radius: 50%;
+    background: #38579f;
+    color: white;
+    font-size: 18px;
+    margin-top: 3%;
+    margin-left: 3%;
+}
+#share{
+    background: #f5f6f8;
+    border-radius: 20px;
+    width: 300px;
+}
+#share .fa-facebook{
+    background: #38579f;
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+#material_wrapper{
+    padding-top: 4%;
+}
+
+#material_wrapper a{
+    margin-left: 2%;
+}
+
+#opened_materials_wrapper{
+    border-bottom: 1px #afd8dd solid;
+    padding-bottom: 5%;
+    margin-bottom: 5%;
+}

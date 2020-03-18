@@ -1,0 +1,44 @@
+#footer_wrapper{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    background: #1b202a; 
+    color: white;
+    font-family: "Roboto light";
+    padding: 0.4% 3% 0% 4%;
+}
+
+#footer_wrapper ul{
+    list-style: none;
+}
+#social_icons{
+    /*margin-top: 3%;*/ 
+}
+
+#social_icons a{
+    color: #75bcf8;
+}
+
+.fa-facebook{
+    background: #286090;
+    color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-right: 2%;
+}
+
+#copy_right_wrapper a{
+    color: #9c9999;
+}
+
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 7, 2016, 11:34:08 AM
+    Author     : mikias
+*/
+

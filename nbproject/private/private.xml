@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="6">
+        <file>
+            <url>web/WEB-INF/Admin/dashboard.jsp</url>
+            <bookmark id="2">
+                <name/>
+                <line>35</line>
+                <key/>
+            </bookmark>
+            <bookmark id="3">
+                <name/>
+                <line>41</line>
+                <key/>
+            </bookmark>
+            <bookmark id="4">
+                <name/>
+                <line>45</line>
+                <key/>
+            </bookmark>
+            <bookmark id="5">
+                <name/>
+                <line>49</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/index.jsp</url>
+            <bookmark id="6">
+                <name/>
+                <line>168</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/concreteClasses/School.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>154</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/web/account_activated.jsp</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/concreteClasses/InactiveUser.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/utilityClasses/DBOperation.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/Servlets/SignIn.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/utilityClasses/DashboardHelper.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/utilityClasses/ServletOperation.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/web/question.jsp</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/Servlets/SignUp.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/web/activate.jsp</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/concreteClasses/DBConnection.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/web/training_question.jsp</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/interfaces/Persistable.java</file>
+            <file>file:/C:/Data/Project/Mine/ተማሪ%20ቤት/temaribet/src/java/utilityClasses/EmailSender.java</file>
+        </group>
+    </open-files>
+</project-private>

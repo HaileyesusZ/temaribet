@@ -1,0 +1,238 @@
+html, body
+{
+    font-family: "Roboto Light";
+    padding: 0;    
+}
+
+body{
+    overflow: hidden;
+}
+
+.container-fluid
+{
+    background: #e3dcae;
+    padding: 2% 5% 2% 5%;
+    
+}
+.kc_fab_main_btn{
+  background-color:#F44336;
+  width:60px;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 10;
+  height:60px;
+  border-radius:100%;
+  background:#F44336;
+  border:none;
+  outline:none;
+  color:#FFF;
+  font-size:36px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  transition:.3s;  
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+#outerWrapper
+{
+    float: left;
+    overflow: hidden;
+    background: #eee;
+    
+}
+#start
+{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    background: rgba(247, 246, 227, 0.64);
+}
+
+#start_button{
+
+    /*to center element both vertically and horizontally*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);  
+    font-size: 40px;
+    background: #44ADEB;
+    color: white;
+}
+
+#start_button:hover{
+    font-size: 40px;
+    background: #3F90BF;
+    color: white;
+}
+
+#finish_window h1
+{
+    font-size: 100px;
+}
+#finish_window h2
+{
+    font-size: 60px;
+}
+#finish_window
+{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5%;
+
+}   
+
+#back_to_dashboard, #start_over
+{
+    margin-bottom: 5%;
+}
+
+/*MATERIALS INFO*/
+#material_info_wrapper{
+    padding-left: 3%;
+    background: #4476EB;
+    color: white;
+}          
+
+.wrappers
+{
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.action_buttons
+{
+    margin-top: 7%;
+    background: none;
+    color: white;
+    border-color: white;
+    border-radius: 0;
+}
+.action_buttons:hover
+{
+    color: #44ADEB;
+    background: white;
+}
+#save_button
+{
+    margin-right: 5%;
+}
+
+#time
+{
+    margin-left:5%;
+    font-family: "Digital-7";
+}
+
+/*maTERIALS*/
+#loaded_material_wrapper
+{
+    background:#F7F6E3;
+}
+
+#loaded_material_wrapper li{
+    list-style-type: none;
+}            
+
+.question
+{
+    margin-left: 3%;
+}
+
+.question_wrapper p
+{
+    font-weight: bold;
+    color: black;
+}
+
+.diagram, .option
+{
+    margin-left: 6%;
+}
+
+/*answer sheet css*/
+
+#answer_sheet_wrapper
+{
+    background: white;
+}
+
+#answer_sheet_wrapper ul{
+    margin-bottom: 5%;
+}
+
+#answer_sheet_wrapper li{
+    margin-right: 12%;
+    list-style-type: none;
+    display: inline;
+}
+
+.correct_message, .description
+{
+    display: none;
+}
+
+
+/*Side menu*/
+.menu
+{
+    overflow-x: hidden;
+    position: relative;
+    left: 0;
+}
+
+.menu-open
+{
+    left: 230px;
+}
+
+.menu-open .menu-side
+{
+    left : 0;
+}
+
+.menu-side,.menu
+{
+    -webkit-transition: left 0.5s ease;
+    -moz-transition: left 0.5s ease;
+    -o-transition: left 0.5s ease;
+    transition: left 0.5s ease;
+}
+
+
+.menu-side
+{
+    background: #333;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: -230px;
+    width: 230px;
+    height: 100%;
+    padding: 2%;
+
+}
+
+@media screen and (max-width:768px)
+{
+    #finish_window h1
+    {
+        font-size: 48px;
+    }
+    #finish_window h2
+    {
+        font-size: 30px;
+    }
+
+}
+#showImages{
+    margin-left: 16em;
+    margin-top: -0.2em !important;
+}

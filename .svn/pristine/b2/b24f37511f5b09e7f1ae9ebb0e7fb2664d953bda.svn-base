@@ -1,0 +1,124 @@
+package Servlets;
+
+import com.lambdaworks.crypto.SCryptUtil;
+import concreteClasses.InactiveUser;
+import concreteClasses.User;
+import concreteClasses.UserPreference;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utilityClasses.Data;
+import utilityClasses.ErrorReporter;
+import utilityClasses.ServletOperation;
+
+@WebServlet(name = "SignIn", urlPatterns = {"/Sign-in"})
+public class SignIn extends HttpServlet {
+
+  
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        RequestDispatcher signinDispatcher = request.getRequestDispatcher("/index.jsp");
+        signinDispatcher.forward(request, response);
+    }
+
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        //retreive all parameters of signin form
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String rememberMe = request.getParameter("rememberMe");
+        
+        //a request dispatcher to redirect to home page
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+        
+        
+        //validate accepted inputs
+        if(email.isEmpty() || !Pattern.matches(Data.EMAIL_REGEX, email)){
+            request.setAttribute("emailError", ErrorReporter.EMAIL_ERROR);
+            dispatcher.forward(request, response);
+            return;
+        }
+        // hold email input incase signing in fails
+        request.setAttribute("email", email);
+        
+        if(password.isEmpty() || password.length() < 6){
+            request.setAttribute("passwordError", ErrorReporter.PASSWORD_ERROR);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        HashMap <String,String> criterion = new HashMap<>();
+        
+        // get the user with given email
+        criterion.put("email", email); 
+        
+        try {
+            // first, look if an inactive user exists
+            ArrayList<User> pendingUsers = User.fetchPendingUserInfo(criterion);
+            if( pendingUsers!= null){
+                User pendingUser = pendingUsers.get(0);
+                request.setAttribute("userId", pendingUser.getId());
+                request.setAttribute("avatar", pendingUser.getProfilePicture());
+                request.setAttribute("unactivatedEmailUsageError", ErrorReporter.UNACTIVATED_EMAIL_USAGE_ERROR);
+                
+                request.getRequestDispatcher("activate.jsp").forward(request,response);
+                return;
+            }
+            
+            // look if the user exists
+            ArrayList<User> toLogin = User.fetch(criterion);
+            if(toLogin == null){
+                request.setAttribute("noSuchUserError", ErrorReporter.NO_SUCH_USER_ERROR);
+                dispatcher.forward(request, response);
+                return;
+            }
+            
+            // get the user to sign in
+            User goUser = toLogin.get(0);
+            
+            //check password given with hash stored
+            if(! SCryptUtil.check(password, goUser.getPassword())) {
+                request.setAttribute("noSuchUserError", ErrorReporter.NO_SUCH_USER_ERROR);
+                dispatcher.forward(request, response);
+                return;
+            }
+            
+            // get user preferences
+            try {
+                int userId = goUser.getId();
+                HashMap<String, String> condition  = new HashMap<>();
+                condition.put("userId", String.valueOf(userId));
+                
+                // add the user and his/her preferences to session
+                if(rememberMe != null){
+                    String[] userCookieData = ServletOperation.RememberUser(userId);
+                    // check cookie and set
+                    ServletOperation.addRememberMeCookie(request, response, userCookieData);
+                }
+                
+                ServletOperation.SignInUser(goUser, request, response, "/Temaribet/Dashboard");
+                
+            }catch(Exception ex){
+                request.setAttribute("loginError", ErrorReporter.LOGIN_ERROR);
+                dispatcher.forward(request, response);
+            }
+        }catch(Exception ex){
+            request.setAttribute("loginError", ErrorReporter.LOGIN_ERROR);
+            dispatcher.forward(request,response);
+        }        
+    }
+}

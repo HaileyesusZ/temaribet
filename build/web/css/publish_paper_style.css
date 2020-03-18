@@ -1,0 +1,88 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 1, 2016, 11:53:46 PM
+    Author     : Tsige
+*/
+html, body, .container-fluid, #start_area, #main_area
+{
+    height: 100%;
+}
+
+
+#start_area
+{
+    position: relative;
+    padding-top: 12%;
+}
+#create_button
+{
+    border-radius: 0;
+}
+#filter_header
+{
+    margin-bottom: 3%;
+}
+.form-group, #editing_area form
+{
+    margin-bottom: 2%;   
+}
+
+
+#main_area
+{
+    position: relative;
+    left: 100%;
+    display: none;   
+}
+#back_button{
+    border-radius: 100%;
+    margin-left: 5%;
+    margin-top:1%;
+}
+#question_input{
+    margin-bottom: 1%;
+}
+#editing_area
+{
+    padding: 3% 2% 2% 3%;
+}
+#display_area
+{
+    padding: 5% 2% 2% 3%;    
+}
+#dispay_form
+{
+    margin-bottom: 5%;
+}
+.materialg_action_buttons
+{
+    width: 20%;
+}      
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    padding: 0.5%;
+    margin-right: 2%;
+    background-color: #f24163;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #8A2538;
+}

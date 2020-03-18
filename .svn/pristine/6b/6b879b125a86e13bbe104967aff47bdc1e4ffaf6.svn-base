@@ -1,0 +1,226 @@
+package Servlets;
+
+import concreteClasses.InactiveUser;
+import concreteClasses.Progress;
+import concreteClasses.User;
+import concreteClasses.UserPreference;
+import java.io.File;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import utilityClasses.Data;
+import utilityClasses.EmailSender;
+import utilityClasses.ErrorReporter;
+import utilityClasses.ServletOperation;
+
+@WebServlet(name = "SignUp", urlPatterns = {"/Sign-up"})
+public class SignUp extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher signupDispatch =  req.getRequestDispatcher("/signup.jsp");
+        signupDispatch.forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        
+        RequestDispatcher rd = req.getRequestDispatcher("signup.jsp");
+
+        //accept all the parameters of the sign-up form
+        String firstName = req.getParameter("first_name");
+        String lastName = req.getParameter("last_name");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String passwordConfirmation = req.getParameter("password_confirmation");
+        Integer grade = Integer.valueOf(req.getParameter("grade"));
+        String stream  = req.getParameter("stream");
+        String userSex = req.getParameter("sex");
+        String avatar = req.getParameter("avatar");
+        String terms = req.getParameter("terms");
+        
+
+        /*
+            validation of paramers begins here
+        */
+        
+        if(userSex == null){
+            req.setAttribute("sexError", ErrorReporter.SEX_ERROR);
+            rd.forward(req, resp);
+            return;
+        }
+        Character sex = userSex.charAt(0);
+        // remember this input in case signing up fails
+        req.setAttribute("sex", sex);
+        
+        if(terms == null){
+            req.setAttribute("termsError", ErrorReporter.TERMS_ERROR);
+            rd.forward(req, resp);
+            return;
+        }
+        
+        if(grade == null){
+            req.setAttribute("termsError", ErrorReporter.GRADE_ERROR);
+            rd.forward(req, resp);
+            return;
+        }
+        
+        else if(grade == 9 || grade == 10){
+            if(stream != null){
+                req.setAttribute("invalidStreamError", ErrorReporter.INVALID_STREAM_ERROR);
+                rd.forward(req, resp);
+                return;
+            }
+        }
+        else if(grade == 11 || grade == 12) {
+            stream = req.getParameter("stream");
+            if(stream == null){
+                req.setAttribute("mustChooseStreamError", ErrorReporter.MUST_CHOOSE_STREAM_ERROR); 
+                rd.forward(req, resp);
+                return;
+            }
+        }
+        
+        // remember this input in case signing up fails
+        req.setAttribute("grade", grade);
+        req.setAttribute("stream", stream);
+        
+        //remove white spaces from both sides
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+        
+        if(firstName.isEmpty() ||  firstName.contains(" ") ){ // a regex to match anything but white space character
+            req.setAttribute("firstNameError", ErrorReporter.FIRST_NAME_ERROR + " it is '"+firstName+"'");
+            rd.forward(req, resp);
+            return;
+        }
+        // remember this input in case signing up fails
+        req.setAttribute("firstName", firstName);
+        
+        if(lastName.isEmpty() || lastName.contains(" ")){
+            req.setAttribute("lastNameError", ErrorReporter.LAST_NAME_ERROR + " it is '"+firstName+"'");
+            rd.forward(req, resp);
+            return;
+        }
+        // remember this input in case signing up fails
+        req.setAttribute("lastName", lastName);
+         
+        if(! Pattern.matches(Data.EMAIL_REGEX, email)){
+            req.setAttribute("emailError", ErrorReporter.EMAIL_ERROR);
+            rd.forward(req, resp);
+            return;
+        }
+        // remember this input in case signing up fails
+        req.setAttribute("email", email);
+        
+        if(password.trim().length() < Data.PASSWORD_LENGTH){
+            req.setAttribute("passwordError", ErrorReporter.PASSWORD_ERROR);
+            rd.forward(req,resp);
+            return;
+        }
+        
+        if(! passwordConfirmation.equals(password)){
+            req.setAttribute("passwordConfirmationError", ErrorReporter.CONFIRM_PASSWORD_ERROR);
+            rd.forward(req, resp);
+            return;
+        }
+        
+        // setup user chosen avatar
+        String avatarPath = "images/avatars/";
+        if(avatar == null){
+            avatar = "avatar_1";
+        }
+        avatarPath += avatar + ".png";
+               
+        // hash the given password 
+        String hashedPassword = ServletOperation.getHash(password);
+        
+        User pendingUser = new User(null, firstName, lastName, sex, email, hashedPassword, avatarPath, null, null, null, grade, stream);
+        
+        try {
+            // check if the email given is either registered or unactivated
+            HashMap<String,String> condition = new HashMap<>();
+            condition.put("email", email);
+            if(User.fetch(condition) != null){
+                req.setAttribute("emailExistsError", ErrorReporter.EMAIL_EXISTS_ERROR);
+                rd.forward(req,resp);
+                return;
+            }
+            
+            ArrayList<User> unactivatedAccount =  User.fetchPendingUserInfo(condition);
+            if( unactivatedAccount!= null){
+                User unactivatedUser = unactivatedAccount.get(0);
+                req.setAttribute("userId", unactivatedUser.getId());
+                req.setAttribute("avatar", unactivatedUser.getProfilePicture());
+                req.setAttribute("unactivatedEmailUsageError", ErrorReporter.UNACTIVATED_EMAIL_USAGE_ERROR);
+                
+                req.getRequestDispatcher("activate.jsp").forward(req,resp);
+                return;
+            }
+            
+             // persist as an inactive user
+            pendingUser.persist(false);
+            
+            /*
+                setup the activation logic
+            */
+            // reload the pending users table
+            unactivatedAccount = User.fetchPendingUserInfo(condition);
+            String[] hashedData = ServletOperation.setupEmailActivation(unactivatedAccount.get(0).getId());
+            // send activation link to email
+            EmailSender.sendEmailActivation(new String[] {email, hashedData[0], hashedData[1]});
+            
+        } catch (Exception ex) {
+            req.setAttribute("signUpError", ErrorReporter.SIGN_UP_ERROR);
+            rd.forward(req, resp);
+        }
+        // send email activation notice
+        req.setAttribute("name", firstName);
+        req.setAttribute("email", email);
+        req.setAttribute("avatar", avatarPath);
+        req.getRequestDispatcher("activate.jsp").forward(req,resp);
+        
+    }
+
+    private void startProgress(String stream, int userId) throws Exception {
+        try {
+            
+            if(stream == null){
+                int  [] subjects= {1,2,3,4,5,6,7,9,10};
+                addToDatabase(subjects, userId);
+            }else if(stream.equals("Natural")){
+                int [] subjects = {1,2,4,5,6,7,8};
+                addToDatabase(subjects, userId);
+            }else if(stream.equals("Social")){
+                int [] subjects = {1,2,4,9,10,11};
+                addToDatabase(subjects, userId);
+            }
+            
+        }catch(Exception ex){
+            throw new Exception(ErrorReporter.STARTING_PROGRESS_ERROR);
+        }
+    }
+
+    private void addToDatabase(int[] subjects, int userId) throws Exception {
+        try {
+            Progress progress;
+            for(int subjectId : subjects){
+                progress = new Progress(null,userId, subjectId, null, 0,null);
+                progress.persist(true);
+            }
+        }catch(Exception ex){
+            throw new Exception (ex.getMessage());
+        }
+    }
+}

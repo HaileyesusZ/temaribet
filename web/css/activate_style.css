@@ -1,0 +1,161 @@
+body
+{
+   overflow-x: hidden;    
+}
+
+.container-fluid
+{
+    background: #e3dcae;
+    font-family: "Roboto light";
+}
+
+#hero_container_wrapper_for_signup
+{
+    padding:3% 4% 3% 4%;
+    background: #f8f8f8;
+    margin: 0% 3% 3% 3%;
+    
+}
+
+#first_name, #password{
+    margin-right: 10px;
+}
+
+.form-control{
+    border-radius: 0;
+    margin-bottom: 10px;
+}
+
+button[type = "submit"]{
+    border-radius: 0;
+    width: 150px;
+}
+
+#profile_picture{
+    margin-bottom: 5%;
+}
+#profile_picture_img
+{
+    margin-bottom: 3%;
+}
+
+#whole_wrapper{
+    padding:4%;
+    box-shadow: #ccc 1px 1px 1px;
+    background: #fff;
+
+}
+
+.form_wrapper
+{    
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    /*margin-left: 2%;*/
+}
+
+.title_wrapper
+{
+    padding: 0 0 10px 30px;
+    background: #f24163;
+    color: #fff;
+    margin:2% 3% 0% 3%;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    padding: 3%;
+    background-color: #f24163;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #8A2538;
+}
+
+
+#profile_picture_wrapper
+{
+    display: flex;
+    align-items: left;
+    padding-left:0;
+    flex-wrap: wrap;
+    /*background: #aaa;*/
+}
+
+
+    input[type='radio']
+    {
+        display: none;
+    }
+    
+    label {
+  /*border: 1px solid #fff;*/
+  /*padding: 5px;*/
+  display: block;
+  position: relative;
+  margin: 3px;
+  cursor: pointer;
+
+}
+
+label:before {
+  background-color: white;
+  color: white;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  /*border: 1px solid grey;*/
+  position: absolute;
+/*  top: -5px;
+  left: -5px;*/
+  z-index: 1;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 28px;
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+label img {
+  height: 80px;
+  width: 80px;
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+}
+
+:checked + label {
+  border-color: #ddd;
+}
+
+:checked + label:before {
+  content: "✓";
+  background-color: #f24163;
+  transform: scale(1);
+}
+
+:checked + label img {
+  transform: scale(0.75);
+}
+
+.icon
+{
+    height: 160px;
+}
+  
+    
+
+

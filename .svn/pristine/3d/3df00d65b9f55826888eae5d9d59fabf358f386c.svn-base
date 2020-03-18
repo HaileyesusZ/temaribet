@@ -1,0 +1,347 @@
+<%-- 
+    Document   : studentDashboard
+    Created on : Mar 14, 2016, 11:02:23 AM
+    Author     : YiseHACK
+--%>
+
+<%@page import="java.io.File"%>
+<%@page import="org.json.simple.JSONArray"%>
+<%@page import="java.util.Set"%>
+<%@page import="org.json.simple.JSONObject"%>
+<%@page import="concreteClasses.Subject"%>
+<%@page import="utilityClasses.ServletOperation"%>
+<%@page import="concreteClasses.User"%>
+<%@page import="concreteClasses.ExamMaterial"%>
+<%@page import="concreteClasses.OpenedMaterial"%>
+<%@page import="concreteClasses.PinnedMaterial"%>
+<%@page import="concreteClasses.Progress"%>
+<%@page import="utilityClasses.LocaleOperator" %>
+<%@page import="java.util.ArrayList"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/header_style.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/footer_style.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/student_dashboard_style.css"/>
+        <link rel="stylesheet" type="text/css" href="./css/sidebar.css"/>
+        <meta name="viewport" content="width = device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Student Dashboard</title>
+
+    </head>
+    <body class="menu">
+        <!-- Multi-purpose modal window -->
+        <div class="modal fade feedback_modal">
+            <div class="modal-dialog">
+                <div class="modal-content text-center">
+                    <div class="modal-title">
+                        <h2></h2>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>     
+
+        <div class="loading_indicator_wrapper text-center">
+            <img class="loading_indicator" src="images/ajax-loader.gif"/>
+        </div>
+
+        <%@include file="./WEB-INF/header.jsp" %>
+
+        <div class="container-fluid"> 
+            
+            <%@include file="WEB-INF/sidebar.jsp" %>
+
+            <div class="row" id="dashboard_title">                        
+                <h3>Dashboard</h3>  
+            </div>
+            <div class="row" id="whole">
+                <!--    filter wrapper -->
+                <div class="col-md-3" id = "filter_wrapper">
+
+                    <form id="search_form">
+                        <div class="form-group has-feedback">
+                            <input type="search" placeholder ="Search for materials" class="form-control search-input" name="search_term"/>
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </form>
+                    <hr/>
+                    <form>
+                        <h4 id="filter_header"><span class="glyphicon glyphicon-filter"> </span> Advanced Filter</h4>
+                        <div class ="form-group">
+                            <select class="form-control has-feedback" name="exam_type">
+
+                                <option value="any"> 
+                                        Any Exam Type
+                                </option>
+                                <option value="Matric">Matric</option>
+                            </select>
+
+                        </div>
+                        <div class ="form-group">
+                            <select class="form-control has-feedback" name="year">
+                                <span class="glyphicon glyphicon-alert form-control-feedback"></span>
+                                <option value="any">
+                                     Any Year 
+                                </option>
+                                <option>2007</option>
+                                <option>2008</option>
+                            </select>
+                        </div>
+                        <div class ="form-group">
+                            <% ArrayList<Subject> subjects = (ArrayList<Subject>) request.getAttribute("subjects");
+                                    if(subjects != null && subjects.size() > 0) {
+                                    %>  <select class = "form-control" name = "subject">
+                                        <option value = "0" selected>
+                                            Any Subject
+                                        </option><%
+                                        for(Subject subject : subjects) {
+                                            %>
+                                            <option value="<%=subject.getId()%>"><%= subject.getName()%></option>
+                                            <%
+                                        }
+                                        %> </select> <%
+                                   
+                                    }else {
+                                        %> <div class = "text-danger"> Subjects can not be loaded. Please refresh this page </div><%
+                                    }
+                                %>   
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success col-xs-offset-5 col-xs-7" id ="filter_button" type = "button">
+                                Filter
+                            </button>
+                        </div>    
+                    </form>  
+
+                </div>                             
+
+                <!--     summary wrapper   -->
+                <div class="col-md-9" id="summary_wrapper">
+
+                    <!--     filter results wrapper   -->
+                    <div class="table-responsive" id="filter_results_wrapper">                  
+                        <h4 id="filter_header"><span class="glyphicon glyphicon-ok"> </span>   Matching materials <span class="glyphicon glyphicon-resize-small toggle"></span></h4>
+                        <div class="content">
+                            <table class="table table-hover table-striped filter_results">
+                                <caption><span class="badge"> </span> Total Materials match your search</caption>
+                                <tr>
+                                    <th> <span class="fa fa-info-circle fa-lg"></span></th>
+                                    <th>No. </th>
+                                    <th>Subject</th>
+                                    <th>Exam type</th>
+                                    <th>
+                                        Year
+                                        <span id="year_sort_asc" class="glyphicon glyphicon-chevron-up" style=""/></span>
+                                        <span id="year_sort_desc" class="glyphicon glyphicon-chevron-down"/></span>
+                                    </th>
+                                    <th>Number of questions</th>
+                                    <th>Open in...</th>
+                                </tr>
+                            </table>
+                            <div class = "text-center">
+                                <ul class = "pagination" id="materials_navigation">
+                                    
+                                </ul>
+                            </div>
+                        </div>                    
+                        <hr/>
+                    </div>
+
+                    <div class="row" id="materials">
+                        <!--        progress wrapper    -->
+
+
+                        <div class="row" id="progress_wrapper"> 
+                            <h4><i class="glyphicon glyphicon-stats"></i>
+                                Progress Summary
+                                <span class="glyphicon glyphicon-resize-small toggle"></span>
+                            </h4>
+                            <div class="content">
+                                <% ArrayList<Progress> progresses = (ArrayList<Progress>) request.getAttribute("progresses");
+                                    if (progresses == null) {
+                                %>
+                                <div class="text-danger">Progress can not be loaded. Please refresh this page.</div>
+                                <%
+                                } else {
+                                    for (Progress progress : progresses) {
+                                %>
+                                <div class="radial_progress"
+                                     title="Progress details"
+                                     data-content="Completed: 0 Matric, 0 Model and 0 Mid-term exams.">
+                                    <div class="progress_wrapper text-center" style="background: linear-gradient(0deg , <%
+                                        if (progress.getPoints() >= 75) {
+                                         %> green <%
+                                                } else if (progress.getPoints() >= 40) {
+                                         %> orange <%
+                                                } else {
+                                         %> red <%
+                                                    }
+                                         %>
+                                         <%=progress.getPoints()%>% , #eaeaea 1%);">
+                                        <div class="progress_indicator"><%=progress.getPoints()%> %<h4><%=progress.getSubjectName()%></h4></div>	
+                                    </div>
+<!--                                    <div class="progress_description">
+                                        <p><b>Completed</b>: 0 Matric, 0 Model and 0 Mid-term exams.</p>
+                                    </div>-->
+                                </div>
+                                <%
+                                        }
+                                    }
+                                %>
+                            </div>                            
+                        </div>
+                        <hr/>
+                        <!--        Pinned materials wrapper    -->
+                        <div id="pinned_materials_wrapper" class ="row">
+
+                            <h4><span class="glyphicon glyphicon-pushpin"></span>
+                                Pinned Materials
+                                <span class="glyphicon glyphicon-resize-small toggle"></span>
+                            </h4>
+                            <div class="row content">
+                                <% ArrayList<PinnedMaterial> pinnedMaterials = (ArrayList<PinnedMaterial>) request.getAttribute("pinnedMaterials");
+                                    if (pinnedMaterials != null && pinnedMaterials.size() > 0) {
+                                        for (PinnedMaterial pinnedMaterial : pinnedMaterials) {
+                                %>
+                                <div class="material_wrapper pinned_material_wrapper text-center" id="p<%=pinnedMaterial.getMaterialId()%>">
+                                    <div class="dropdown matric_icon"
+                                         title="Pinned Material details"
+                                         data-content="<%=pinnedMaterial.getNumberOfQuestions()%> questions <br/> Uploaded on <%=pinnedMaterial.getUploadDate()%> <br/> Allowed time: 3:00 hr<br/><br/><i>Click to open</i>">
+                                        <div class="material_icon_wrapper dropdown-toggle <%=pinnedMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%>" data-toggle="dropdown">
+                                            
+                                            <span class="glyphicon glyphicon-remove-circle pull-right"></span>
+                                        </div>
+                                        <h4 class="subject_indicator clearfix"><%=pinnedMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%></h4>
+                                           
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-header">Open in</div>
+                                            <div class="divider"></div>
+                                            <a target='_blank' href="question?requestType='practice'&id=<%=pinnedMaterial.getId()%>" class="dropdown-item">Training mode</a>
+                                            <a target='_blank' href="question?requestType='exam'&id=<%=pinnedMaterial.getId()%>" class="dropdown-item">Exam mode</a>
+                                        </div>
+                                    </div>
+                                    <p><%=pinnedMaterial.getSubjectName()%> <%=pinnedMaterial.getYear().toString().substring(0, 4)%> <%=pinnedMaterial.getType()%></p>
+                                </div>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <div class="empty_list text-center">
+                                    <h2>You haven't pinned any materials yet.</h2>
+                                    <a>Why pin materials?</a>
+                                </div>
+
+                                <%
+                                    }
+                                %>
+
+
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <!--        opened materials wrapper    -->
+                        <div id="opened_materials_wrapper" class ="row">
+
+                            <h4> <span class="glyphicon glyphicon-folder-open"> </span> 
+                                Opened Materials
+                                <span class="glyphicon glyphicon-resize-small toggle"></span>
+                            </h4>
+                            <div class="row content">
+                                <% ArrayList<OpenedMaterial> openedMaterials = (ArrayList<OpenedMaterial>) request.getAttribute("openedMaterials");
+                                    if (openedMaterials != null && openedMaterials.size() > 0) {
+                                        for (OpenedMaterial openedMaterial : openedMaterials) {
+                                %>
+                                <div class="material_wrapper text-center" id="o<%=openedMaterial.getMaterialId()%>">
+                                    <div class="dropdown model_icon"
+                                         title="Opened material details"
+                                         data-content="<%=openedMaterial.getNumberOfQuestions()%> questions <br/> Uploaded on <%=openedMaterial.getNumberOfQuestions()%> <br/> remaining time: <%=openedMaterial.getRemainingTime()%> <br/> 
+                                         Last opened on <%=openedMaterial.getOpenedDate()%><br/><br/><i>Click to open</i>">
+                                        <div class="material_icon_wrapper text-right dropdown-toggle <%=openedMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%>" data-toggle="dropdown">
+                                               
+                                            <span class="glyphicon glyphicon-pushpin"></span><span class="glyphicon glyphicon-remove"></span>
+                                            
+                                        </div>
+                                        <h4 class="subject_indicator"><%=openedMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%></h4>
+                                        
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-header">Open in</div>
+                                            <div class="divider"></div> 
+                                            <!--<a target='_blank' href="question?requestType='practice'&id=9" class="dropdown-item">Training mode</a>-->
+                                            <a target='_blank' href="question?requestType='exam'&id=9" class="dropdown-item">Continue</a>
+                                        </div>
+                                    </div>
+                                    <p><%=openedMaterial.getSubjectName()%> <%=openedMaterial.getYear().toString().substring(0, 4)%> Matric</p>
+                                </div>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <div class="empty_list text-center">
+                                    <h2>You haven't opened any materials yet.</h2>
+                                    <a>What are opened materials?</a>                                        
+                                </div> 
+                                <%
+                                    }
+
+                                %>
+
+                            </div>
+                        </div>
+                        <hr/>
+
+                        <!--        Recent materials wrapper    -->
+                        <div class="row">
+                            <h4><span class="glyphicon glyphicon-star"> </span> 
+                                 Suggested Materials
+                                <span class="glyphicon glyphicon-resize-small toggle"></span>
+                            </h4>
+                            <div class="row content">
+                                <% ArrayList<ExamMaterial> recentMaterials = (ArrayList<ExamMaterial>) request.getAttribute("recentMaterials");
+                                    if (recentMaterials != null) {
+                                        for (ExamMaterial recentMaterial : recentMaterials) {
+                                %>
+                                <div class="material_wrapper text-center" id="r<%=recentMaterial.getId()%>"> 
+                                    <div class="dropdown model_icon"
+                                         title="Recent Material details"
+                                         data-content="<%=recentMaterial.getNumberOfQuestions()%> questions <br/> Uploaded on <%=recentMaterial.getUploadDate()%> <br/> Allowed time: 3:00 hr<br/><br/><i>Click to open</i>">
+
+                                        <div class="material_icon_wrapper text-right dropdown-toggle <%=recentMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%>" data-toggle="dropdown">
+
+                                            <span class="glyphicon glyphicon-pushpin"></span></div>
+                                            <h4 class="subject_indicator"><%=recentMaterial.getSubjectName().toString().toUpperCase().substring(0,3)%></h4>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-header">Open in</div>
+                                            <div class="divider"></div> 
+                                            <a target='_blank' href="question?requestType='practice'&id=9" class="dropdown-item">Training mode</a>
+                                            <a target='_blank' href="question?requestType='exam'&id=9" class="dropdown-item">Exam mode</a>
+                                        </div>
+                                    </div>
+                                    <p><%=recentMaterial.getSubjectName()%> <%=recentMaterial.getYear().toString().substring(0, 4)%> Matric</p>
+                                </div>  
+                                <%
+                                        }
+                                    }
+                                %>
+                            </div>
+                        </div>
+                        <hr/>
+
+                        <div class="popup_menu">                           
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%@include file="./WEB-INF/footer.jsp" %>
+    </body>   
+    <script src="./js/jquery.js"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/student_dashboard.js"></script>           
+    <script src="js/sidebar.js"></script>           
+</html>

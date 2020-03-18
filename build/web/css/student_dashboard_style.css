@@ -1,0 +1,349 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 14, 2016, 11:25:37 AM
+    Author     : YiseHACK
+*/
+.container-fluid
+{
+
+    font-family: "Roboto light";
+    background: #e3dcae;
+    padding: 2% 4% 3% 4%;
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+#whole
+{
+    background: #fff;
+}
+
+#summary_wrapper
+{
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+#summary_wrapper .row
+{
+    padding: 0 2% 0 2%;
+}
+
+#filter_wrapper
+{
+    padding: 3% 2% 0 2%;
+    border-right: solid #d3e2f1 1px;
+    position: relative;
+    height: 100%;
+}
+
+#filter_button{
+    font-size: 16px;
+    margin-bottom: 10%;    
+}
+
+
+#dashboard_title
+{
+    background: #4476EB;
+    min-height: 50px;
+    color: white;
+    padding-left: 2%;
+}
+
+.radial_progress
+{
+    background: #d3e2f1;
+    height: 90px;
+    cursor:pointer;
+    float:left;
+    margin-right: 25px;
+    border-radius: 45px;
+    margin-bottom: 25px;
+}
+
+.progress_description
+{
+    display: none;
+    max-width: 225px;
+    max-height: 90px;
+    padding-top: 20px;
+    font-size: 16px;
+}
+
+.progress_wrapper
+{
+    height: 100%;
+    width: 90px;
+    border-radius: 50%;
+    float: left;
+}
+
+.progress_indicator
+{
+    margin: 2px;
+    height: 86px;
+    width: 86px;
+    border-radius: 50%;
+    font-size: 16px;
+    background: white;
+    padding-top: 20px;
+}
+
+.progress_indicator:hover
+{
+    font-size: 125%;
+    box-shadow: 1px 1px lightgray;
+}
+
+.progress_indicator h4
+{
+    margin-top:0;
+    font-size: 16px;
+}   
+
+.form-control, .btn{
+
+    border-radius: 0;
+
+}
+
+#summary_wrapper h4, #filter_wrapper h4, #filter_results_wrapper h4
+{
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+#progress_wrapper h4 i, #summary_wrapper h4 span, #filter_wrapper h4 span, #filter_results_wrapper h4 span
+{
+    margin-right: 10px;
+}
+
+#progress_wrapper .toggle, #summary_wrapper .toggle, #filter_wrapper .toggle, #filter_results_wrapper .toggle
+{
+    margin-right: 10px;
+    float: right;
+}
+
+.material_wrapper
+{
+    
+    min-width: 160px;
+    float:left;
+    margin: 0 3% 0 0;
+    padding: 20px;
+    background: #fff;
+}
+
+.material_wrapper p
+{
+    margin-top: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.material_icon_wrapper
+{
+    min-height: 120px;
+    width: 100%;
+    padding: 5px;
+    color: #fff;
+    font-size: 22px;    
+}
+
+.material_icon_wrapper .glyphicon
+{
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.material_icon_wrapper .glyphicon:hover
+{
+    font-size: 26px;
+    text-shadow: #888 -1px 1px;
+}
+
+.search-input
+{
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+
+
+
+#filter_results_wrapper
+{
+    padding-top: 3%; 
+    display: none;
+}
+
+.content
+{
+    /*display: none;*/
+}
+
+.profile_wrapper #profile_picture
+{
+    width: 80px;
+    height: 80px;
+}
+
+.loading_indicator_wrapper
+{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.7;
+    z-index: 10;
+    vertical-align: central;   
+}
+
+.loading_indicator
+{
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 40%;
+    left: 45%;
+}
+.feedback_modal
+{
+    font-family: "Roboto light";
+    color: white;
+}
+
+.success_wrapper .modal-content
+{
+    background: green;
+}
+
+.error_wrapper .modal-content
+{
+    background: maroon;
+}
+
+.progress_modal
+{
+    top: 35%;  
+}
+
+.matric_icon
+{
+    min-height: 120px;
+    background-image: url('../images/matricIcon.png'); 
+}
+
+.model_icon
+{
+    min-height: 120px;
+    background-image: url('../images/modelIcon.png');
+}
+
+.empty_list
+{
+    clear: both;
+    height: 100%;
+    color: #999;
+}
+
+.filter_results tr:hover
+{
+    icon: hand;    
+}
+
+.popup_menu
+{
+    display: none;
+    position: absolute;
+    width: 150px;
+    height: 200px;
+    background: #fff;
+    border: #999 solid 1px;
+    box-shadow: 3px 3px #ccc;
+}
+
+.options
+{
+    position: absolute;
+}
+
+.dropdown-menu
+{
+    top: 0px;
+    left: 105%;
+    padding-bottom: 10px;   
+}
+
+.dropdown-item
+{
+    display: block;
+    padding-left: 15px;
+    background: #fff;
+    border: none;
+    text-decoration: none;
+    color: black;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.dropdown-item:hover
+{
+    background: #eee;
+    text-decoration: none;
+}
+
+.dropdown-header
+{
+    font-weight: bold;
+    color: black;
+}
+
+.subject_indicator
+{
+    position: absolute;
+    top:35%;
+    left:0;
+    color: white;
+    font-weight: bold;
+
+}
+
+.CHE , .ECO
+{
+    background: #ae5fb7;
+}
+
+.ENG
+{
+    background: #83c000;
+}
+
+.MAT
+{
+    background: #c0a700;
+}
+
+.CIV
+{
+    background: #c00036;
+}
+
+.BIO, .GEO
+{
+    background: #0056c0;
+}
+
+.PHY, .HIS
+{
+    background: #8995a3;
+}

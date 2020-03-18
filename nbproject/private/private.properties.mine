@@ -1,0 +1,4 @@
+deploy.ant.properties.file=C:\\Users\\Henok G\\AppData\\Roaming\\NetBeans\\8.0.2\\tomcat70.properties
+j2ee.server.home=C:/All Programs/Xampp/tomcat
+j2ee.server.instance=tomcat70:home=C:\\All Programs\\Xampp\\tomcat
+user.properties.file=C:\\Users\\Henok G\\AppData\\Roaming\\NetBeans\\8.0.2\\build.properties

@@ -1,0 +1,260 @@
+*
+{
+    font-family: "roboto light";
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;   
+}
+html, body, .container-fluid
+{
+    height: 100%;
+    overflow-x: hidden;
+   
+}
+.form-control , .btn{
+    border-radius: 0;  
+}
+
+#top
+{
+    position: relative;
+    height: 100%;
+    background: rgb(251, 251, 252);
+    border-bottom: solid rgb(251, 255, 255) 5px;
+    padding-top: 18%;
+}
+
+#logo_wrapper {
+    border-bottom: solid rgba(0, 0, 0, 0.43) 1px;
+}
+
+#title
+{
+    margin-bottom: -2%;
+    font-size: 500%;
+    color: #C71B1B;
+    font-family: "roboto light"
+}
+
+form
+{
+    padding-left: 6%;
+    border-left: solid rgba(181, 106, 106, 0.43) 2px;
+}
+
+#user_options {
+    margin-top: 5%;
+}
+#create_new_link
+{
+    color: #555;
+    font-size: 1.1em;
+}
+#forget_password
+{
+    color: orange;
+    font-size: 1.1em;
+}
+
+#submit_button
+{
+    background-color: #C71B1B;
+    color: white;
+    border: 0;
+    width: 70%;
+}
+#submit_button:hover {
+    background-color: #b00;
+}
+
+#features_wrapper{
+    padding: 4% 5% 4% 5%;
+    background: rgba(255, 209, 209, 0.08);    
+}
+
+.features h2{
+    margin-bottom:5%; 
+    font-family: "roboto"
+}
+.features h4
+{
+    line-height: 1.5;
+    margin-bottom: 5%;
+}
+
+.features
+{
+    height: 100%;
+    margin-bottom: 10%;
+}
+
+.circle_icon
+{
+    height: 150px;
+    width: 150px;
+    margin-top: 10%;
+}
+.start_now_button
+{
+    background: rgb(251, 251, 252);
+    border: solid #555 1px;
+}
+.start_now_button:hover
+{
+    background:  rgba(240, 240, 250, 1);
+}
+
+#guest_button
+{
+    margin-top: 1%;
+    margin-bottom: 5%;
+}
+
+
+#filter_wrapper{
+    position: relative;
+    left: 100%;
+    display: none;
+    padding: 4% 0 4% 5%;
+    background: rgb(253, 251, 251);
+}
+
+#filter_results_wrapper {
+    display: none;
+}
+
+
+.loading_indicator_wrapper
+{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.7;
+    z-index: 10;
+    vertical-align: central;   
+}
+
+.loading_indicator
+{
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 40%;
+    left: 45%;
+}
+
+#back_to_home_button
+{
+    margin-left: 2.5%;
+    margin-bottom: 2%;
+    border-radius: 100%;
+    font-size: 20px;
+}
+
+#filter_wrapper select
+{
+    border-radius: 0;
+}
+.material_wrapper
+{
+
+    max-width: 120px;
+    float:left;
+    margin: 0 5% 2% 0;
+}
+
+.material_wrapper p
+{
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.material_icon_wrapper
+{
+    margin-left: 15%;
+    height: 100px;
+    width: 80px;
+    background-size: 80px 100px;
+    font-size: 16px;
+}
+
+
+.folder_wrapper
+{
+
+    max-width: 150px;
+    float:left;
+    margin: 0 5% 2% 0;
+}
+
+.folder_wrapper p
+{
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.folder_icon_wrapper
+{
+    margin-left: 15%;
+    height: 100px;
+    width: 100px;
+    background-size: 100px 100px;
+    font-size: 16px;
+}
+
+
+#filter_wrapper h4
+{
+    margin-bottom: 20px;
+}
+
+#filter_wrapper h5 ,#filter_wrapper h5
+{
+    margin-bottom: 20px;
+}
+
+
+
+.more_features
+{
+    background: #555;
+    min-height: 350px;
+}
+
+
+#filter_button{
+    border:solid 1px #158480;
+    background: none;
+    font-size: 16px;
+    color:#158480;
+    margin-bottom: 10%;
+
+}
+
+#filter_button:hover{
+    background: #158480;
+    font-size: 16px;
+    color:white;
+}
+#verification_modal{
+    color: black;
+}
+
+/*.form-group .form-control-feedback
+{
+    margin-top: 5px;
+}*/
+
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 7, 2016, 11:55:05 AM
+    Author     : mikias
+*/
+

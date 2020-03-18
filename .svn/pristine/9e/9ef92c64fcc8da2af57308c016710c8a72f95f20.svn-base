@@ -1,0 +1,177 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package concreteClasses;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utilityClasses.DBOperation;
+
+/**
+ *
+ * @author haileyesus
+ */
+public class UserPreference {
+    private static final String TABLE_NAME = "userpreferences";
+    private static final String VIEW_NAME= "userpreferencesview";
+    
+    //table attriubtes
+    private  Integer id;
+    private  int userId;
+    private  int language;
+    private  String theme;
+    
+    //Properties used for database operations
+    private static String sql;
+    private static PreparedStatement statement;
+    private static ResultSet result;
+    private static Connection conn;
+    
+    public UserPreference(Integer id, int userId, int language, String theme){
+        this.id = id;
+        this.userId = userId;
+        this.language = language;
+        this.theme = theme;
+    }
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public int getLanguage() {
+        return language;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+    
+    public Boolean persist(boolean active) throws Exception{
+        ArrayList<Object> columns = new ArrayList<>();
+        
+        columns.add(null);
+        columns.add(this.userId);
+        columns.add(this.language);
+        columns.add(this.theme);
+        
+        HashMap<String, String> condition = new HashMap<>();
+        condition.put("userId", String.valueOf(this.userId));
+        
+        try {
+            return DBOperation.persist(TABLE_NAME, columns, condition, active);
+        }catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+    
+    public static UserPreference fetch(Integer id) throws Exception{
+        result = DBOperation.fetch(VIEW_NAME, id);
+       
+        if(result != null) {
+            return fetchData().get(0);
+        }
+        return null;
+        
+    }
+
+    public static ArrayList<UserPreference> fetch(HashMap<String,String> parameters) throws Exception{
+        result = DBOperation.fetch(VIEW_NAME, parameters);
+        
+        return fetchData();
+    }
+    
+    public static ArrayList<UserPreference> fetchAll() throws Exception{
+        result = DBOperation.fetchAll(VIEW_NAME);
+        return fetchData();
+    }
+    
+    public static ArrayList<UserPreference> extendFetch(HashMap<String, ArrayList<String>> parameters) throws Exception {
+        result = DBOperation.extendFetch(VIEW_NAME, parameters);
+        return fetchData();
+    }
+    
+    public static ArrayList<UserPreference> fetchData() throws Exception {
+         if(result == null){
+            return null;
+        }
+        ArrayList<UserPreference> usersPreferences = new ArrayList<>();
+        try {
+            while(result.next()){
+                Integer tempId = result.getInt("id");
+                int tempUserId = result.getInt("userId");
+                int tempLanguage = result.getInt("language");
+                String  tempTheme = result.getString("theme");
+                
+                UserPreference userPreferences = new UserPreference(tempId, tempUserId, tempLanguage, tempTheme);
+                usersPreferences.add(userPreferences);
+            }
+            return usersPreferences;
+            
+        }catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public void delete() throws Exception{
+        if(conn == null){
+            conn = DBConnection.getConnection();
+        }
+        
+        sql = "UPDATE '"+TABLE_NAME+"' SET active = 0 WHERE id = ?";
+        try {
+            statement = conn.prepareStatement(sql);
+            statement.setInt(1, this.id);
+            statement.execute();
+        }catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+   
+    public void updateAttribute(String attributeName, String attributeValue) throws Exception {
+        try {
+            DBOperation.updateAttribute(TABLE_NAME, this.getId(), attributeName, attributeValue);
+        }catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public void updateAttributes(HashMap<String,String> attributes) throws Exception {
+         try{
+            DBOperation.updateAttributes(TABLE_NAME, this.getId(), attributes);
+        }
+        catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    
+    public Integer count(HashMap<String,String> paramters) throws Exception {
+        try{
+            return DBOperation.count(VIEW_NAME, paramters);
+        }
+        catch(Exception ex){
+            Logger.getLogger(UserPreference.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex.getMessage());
+        } 
+    }   
+}

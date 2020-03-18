@@ -1,0 +1,55 @@
+body{
+  background-image: url("../images/pic01.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.div-forgot-pas{
+    display: none;
+    margin-top: 8em;
+}
+.navbar-inverse{
+    background-image: none;
+    background-color: white;
+}
+form{
+  background-color: white;
+  padding: 1.7em;
+  border-bottom: 0.2em;
+}
+.form-container{
+    margin-left: 35%;
+    margin-top: 8%;
+}
+.form-signin-heading{
+    color:white;
+    background-color: #404040;
+    margin: 0;
+    padding: 0.5em;
+    border-top: 0.2em;
+    font-family: cursive;
+}
+.btn{
+    background-color: #665851;
+    color: white;
+    border-radius: 0;
+}
+.form-control{
+    margin-bottom: 1em;
+}
+nav.navbar{
+	border-radius: 0;
+	height: 4.5em;
+        border-color: white;
+}
+.navbar-inverse .navbar-brand{
+	padding-left: 3em;
+	padding-top: 0.6em;
+	font-size: 25px;
+	color: #404040;
+	font-family: cursive;
+	font-weight: bold;
+}
+.navbar-inverse .navbar-brand:hover{
+	color: #9d9d9d;
+}

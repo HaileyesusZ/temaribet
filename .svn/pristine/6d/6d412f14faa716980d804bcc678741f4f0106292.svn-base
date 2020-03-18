@@ -1,0 +1,94 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 14, 2016, 7:48:07 PM
+    Author     : Tsige
+*/
+.menu
+{
+    overflow-x: hidden;
+    position: relative;
+    left: 0;
+}
+
+
+.menu-open
+{
+    left: 230px;
+}
+
+.menu-open .menu-side
+{
+    left : 0;
+}
+
+.menu-side,
+.menu
+{
+    -webkit-transition: left 0.5s ease;
+    -moz-transition: left 0.5s ease;
+    -o-transition: left 0.5s ease;
+    transition: left 0.5s ease;
+}
+
+
+.menu-side
+{
+    background: white;
+    color: #337ab7;
+    position: fixed;
+    top: 0;
+    left: -230px;
+    width: 230px;
+    height: 100%; 
+    border-right: 2px solid #eee; 
+}
+
+.menu-side ul{
+    display: inline;
+    list-style-type: none ;
+    list-style: none;
+    font-size: 12px;
+}
+
+#sidebar_ul li{
+    font-size: 14px; 
+    padding: 5% 5% 5% 10%;
+}
+
+#sidebar_ul .active{
+    background: #337ab7;
+    color: white;
+}
+
+#sidebar_ul li:hover{ 
+    background: rgba(51, 122, 183, 0.39);
+    color: white;
+}
+
+#sign_out
+{
+    position: absolute;
+    bottom: 20px; 
+    left: 30%;
+    color: #46b8da;
+}
+#sign_out:hover{
+    background: none;
+}
+#sidebar_profile_wrapper{
+    padding-top: 10%;
+    color: #23527c; 
+}
+
+#sidebar_profile_picture{
+    position: relative;
+    left: 25%;
+    height: 100px;
+    width: 100px;
+}
+
+

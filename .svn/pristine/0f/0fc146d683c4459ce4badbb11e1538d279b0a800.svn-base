@@ -1,0 +1,77 @@
+ /*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 17, 2016, 9:07:48 PM
+    Author     : Tsige
+*/
+html, body
+{
+    font-family: "Roboto Light";
+}
+
+
+.container-fluid
+{
+    background: #e3dcae;
+    padding: 2% 5% 2% 5%;
+    width: 100%;
+}
+/*MATERIALS INFO*/
+#material_info_wrapper{
+    padding-left: 3%;
+    background: #4476EB;
+    color: white;
+}  
+
+/*maTERIALS*/
+#loaded_material_wrapper
+{
+    padding: 3%;    
+    background:#F7F6E3;
+}
+
+#loaded_material_wrapper li{
+    list-style-type: none;
+}     
+
+.description
+{
+    color: #b92c28;
+}
+
+.correct_message, .description
+{
+    display: none;
+}
+
+.option input[type=radio]
+{
+    margin-right: 1%;
+}
+
+.question
+{
+    margin-left: 3%;
+}
+
+.question_wrapper p
+{
+    font-weight: bold;
+    color: black;
+}
+
+.diagram, .option
+{
+    margin-left: 5%;
+    margin-bottom: 1%;
+}
+
+input[type="radio"] + label {
+    color: black;
+    font-weight: bold;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+}

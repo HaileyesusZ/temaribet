@@ -1,0 +1,161 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Servlets;
+
+import concreteClasses.ForgottenPassword;
+import concreteClasses.InactiveUser;
+import concreteClasses.User;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utilityClasses.ErrorReporter;
+import utilityClasses.ServletOperation;
+
+/**
+ *
+ * @author Haileyesus Z
+ */
+@WebServlet(name = "ResetPassword", urlPatterns = {"/Reset-Password"})
+public class ResetPassword extends HttpServlet {
+
+   
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String resetId = request.getParameter("urid");
+        String resetKey = request.getParameter("urkey");
+        
+        if(resetId == null || resetKey == null){
+            response.sendRedirect("/Temaribet");
+            return;
+        }
+        
+        HashMap<String,String> condition = new HashMap<>();
+        condition.put("resetId", resetId);
+        condition.put("resetKey", resetKey);
+        
+        try {
+            ArrayList<ForgottenPassword> forgottenPasswords = ForgottenPassword.fetch(condition);
+            if(forgottenPasswords == null){
+                response.sendRedirect("password_reset_theft.jsp");
+                return;
+            }else if(forgottenPasswords.size() > 1){
+                Logger.getLogger("password-reset-duplication").log(Level.SEVERE, "Duplicate Accounts found with the same id and key", new Throwable());
+                response.getWriter().println("A fatal problem occured, Please sign up again");
+                return;
+            }
+            
+            request.setAttribute("urid", resetId);
+            request.setAttribute("urkey", resetKey);
+            request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+            
+           
+            
+        }catch(Exception ex){
+            response.getWriter().println("Error while activaing your account, Please try again or sign up again");
+        }
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+                String resetId = request.getParameter("urid");
+                String resetKey = request.getParameter("urkey");
+                
+                if(resetId==null || resetKey == null){
+                    response.sendRedirect("password_reset_theft.jsp");
+                    return;
+                }
+                
+                String password = request.getParameter("password");
+                String confirmedPassword = request.getParameter("confirmed_password");
+                
+                if(password.isEmpty() || password.length() < 6){
+                    request.setAttribute("passwordError", ErrorReporter.PASSWORD_ERROR);
+                    request.setAttribute("urid", resetId);
+                    request.setAttribute("urkey", resetKey);
+                    request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                    return;
+                }
+               if(confirmedPassword.isEmpty() || ! confirmedPassword.equals(password)){
+                    request.setAttribute("confirmedPasswordError", ErrorReporter.CONFIRM_PASSWORD_ERROR);
+                    request.setAttribute("urid", resetId);
+                    request.setAttribute("urkey", resetKey);
+                    request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+                    return;
+                }
+               
+               HashMap<String,String> condition = new HashMap<>();
+               condition.put("resetId", resetId);
+               condition.put("resetKey", resetKey);
+               try {
+                   ArrayList<ForgottenPassword> forgottenPasswords = ForgottenPassword.fetch(condition);
+                   if(forgottenPasswords == null){
+                        response.sendRedirect("password_reset_theft.jsp");
+                        return;
+                   }
+                   ForgottenPassword forgottenPassword = forgottenPasswords.get(0);
+                   int userId = forgottenPassword.getUserId();
+                   // delete the forgotten password link
+                   forgottenPassword.delete();
+                   // get the user that is trying to get their password reset
+                   User user = User.fetch(userId);
+                   if(user == null){
+                        Logger.getLogger("fogotten-password-foreign-key-user-id-not-found").log(Level.SEVERE, "Forgotten Password points to an invalid user", new Throwable());
+                        response.getWriter().println("A fatal problem occured!");
+                        return;
+                   }
+                    String hashedPassword = ServletOperation.getHash(password);
+                    user.updateAttribute("password", hashedPassword);
+                    // dispaly success page
+                    request.setAttribute("firstName", user.getFirstName());
+                    request.setAttribute("avatar", user.getProfilePicture());
+                    request.getRequestDispatcher("password_reset_success.jsp").forward(request, response);
+               }catch(Exception ex){
+                   request.setAttribute("passwordReseterror", ErrorReporter.PASSWORD_RESET_ERROR);
+                   request.getRequestDispatcher("password_reset.jsp").forward(request, response);
+               }
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Reset Password";
+    }// </editor-fold>
+
+}

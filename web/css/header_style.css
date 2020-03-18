@@ -1,0 +1,38 @@
+ 
+
+#logo_wrapper
+
+{ 
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;      
+    background: #fff;
+    font-family: "Roboto light";
+    padding : 0.5% 3% 0.5% 3%;
+
+} 
+
+#header_profile_wrapper{
+    margin-top: 0.6%;
+}
+
+#header_profile_picture{
+    margin-right: 3%;
+}
+
+i.fa-bars , i.fa-arrow-left
+{ 
+    margin-right: 1%;
+}
+
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 7, 2016, 11:52:19 AM
+    Author     : mikias
+*/
+
